@@ -1,0 +1,1703 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鹤白工作室 - 迷你世界地图创作者官方网站</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net.net/npm.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    
+    <!-- Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        accent: '#F59E0B',
+                        dark: {
+                            100: '#374151',
+                            200: '#1F2937',
+                            300: '#111827',
+                            400: '#030712'
+                        },
+                        light: {
+                            100: '#FFFFFF',
+                            200: '#F3F4F6',
+                            300: '#E5E7EB',
+                            400: '#D1D5DB'
+                        }
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'slide-right': 'slideRight 0.6s ease-out',
+                        'slide-left': 'slideLeft 0.6s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'wave-animation': 'wave 8s ease-in-out infinite alternate',
+                        'wave-animation-delay': 'wave 8s ease-in-out 2s infinite alternate',
+                        'float': 'float 6s ease-in-out infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                        'pulse-scale': 'pulseScale 2s ease-in-out infinite',
+                        'spin-slow': 'spin 15s linear infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        slideRight: {
+                            '0%': { transform: 'translateX(-20px)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' },
+                        },
+                        slideLeft: {
+                            '0%': { transform: 'translateX(20px)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' },
+                        },
+                        wave: {
+                            '0%': { transform: 'translateY(0) translateX(0)' },
+                            '50%': { transform: 'translateY(-10px) translateX(5px)' },
+                            '100%': { transform: 'translateY(0) translateX(10px)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        },
+                        pulseScale: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.05)' },
+                        }
+                    }
+                },
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .card-hover {
+                @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+            }
+            .btn-primary {
+                @apply bg-primary text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 hover:bg-primary/90 hover:shadow-md hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50 active:scale-95;
+            }
+            .btn-secondary {
+                @apply bg-light-300 dark:bg-dark-100 text-light-400 dark:text-light-100 font-medium py-2 px-4 rounded-lg transition-all duration-300 hover:bg-light-400 dark:hover:bg-dark-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-light-400/50 dark:focus:ring-dark-200/50 active:scale-95;
+            }
+            .input-field {
+                @apply w-full px-4 py-2 rounded-lg border border-light-300 dark:border-dark-100 bg-light-100 dark:bg-dark-200 text-dark-300 dark:text-light-100 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-300;
+            }
+            .section-padding {
+                @apply py-16 md:py-24;
+            }
+            .nav-link {
+                @apply relative px-3 py-2 text-light-400 dark:text-light-300 hover:text-primary dark:hover:text-primary transition-colors duration-300;
+            }
+            .nav-link::after {
+                @apply content-[''] absolute w-0 h-0.5 bg-primary left-0 -bottom-1 transition-all duration-300;
+            }
+            .nav-link:hover::after {
+                @apply w-full;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                @apply hidden;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .wave-container {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                overflow: hidden;
+                line-height: 0;
+                transform: rotate(180deg);
+            }
+            .wave-container svg {
+                position: relative;
+                display: block;
+                width: calc(100% + 1.3px);
+                height: 80px;
+            }
+            .wave-container .shape-fill {
+                fill: rgba(59, 130, 246, 0.1);
+            }
+            .wave-container-2 {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                overflow: hidden;
+                line-height: 0;
+                transform: rotate(180deg);
+            }
+            .wave-container-2 svg {
+                position: relative;
+                display: block;
+                width: calc(100% + 1.3px);
+                height: 60px;
+            }
+            .wave-container-2 .shape-fill {
+                fill: rgba(16, 185, 129, 0.1);
+            }
+        }
+    </style>
+</head>
+
+<body class="font-inter bg-light-200 dark:bg-dark-300 text-dark-300 dark:text-light-100 transition-colors duration-300">
+    <!-- SSL安全认证标志 -->
+    <div class="fixed top-4 right-4 z-50 bg-white dark:bg-dark-200 px-3 py-1 rounded-full shadow-md text-xs flex items-center space-x-1 opacity-80 hover:opacity-100 transition-opacity">
+        <i class="fa fa-lock text-green-500"></i>
+        <span>SSL安全认证</span>
+    </div>
+
+    <!-- 顶部快捷栏 -->
+    <header class="sticky top-0 z-40 bg-dark-300 text-light-100 shadow-lg transition-all duration-300">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <!-- 工作室Logo -->
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/07490eee2b744729b3ad88b676f0adb1~tplv-a9rns2rl98-image.image?rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1754414919&amp;x-signature=2WutMD8m2x1jwIQDn0JXpERbUtk%3D" alt="鹤白工作室Logo" class="w-8 h-8 rounded-full object-cover">
+                    </div>
+                    <span class="font-bold text-xl md:text-2xl">鹤白工作室</span>
+                </div>
+
+                <!-- 导航链接 - 桌面端 -->
+                <nav class="hidden md:flex items-center space-x-1">
+                    <a href="#home" class="nav-link">首页</a>
+                    <a href="#founder" class="nav-link">创始人</a>
+                    <a href="#about" class="nav-link">工作室简介</a>
+                    <a href="#members" class="nav-link">团队成员</a>
+                    <a href="#works" class="nav-link">地图作品</a>
+                    <a href="#community" class="nav-link">社区交流</a>
+                    <a href="#blacklist" class="nav-link">黑名单</a>
+                    <a href="#feedback" class="nav-link">反馈中心</a>
+                    <a href="#report" class="nav-link">举报中心</a>
+                    <a href="#join" class="nav-link">加入我们</a>
+                </nav>
+
+                <!-- 右侧功能区 -->
+                <div class="flex items-center space-x-4">
+                    <!-- 主题切换 -->
+                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-dark-200 transition-colors">
+                        <i class="fa fa-sun-o dark:hidden"></i>
+                        <i class="fa fa-moon-o hidden dark:inline-block"></i>
+                    </button>
+
+                    <!-- 登录按钮 -->
+                    <button id="login-btn" class="btn-primary hidden md:block">登录</button>
+
+                    <!-- 移动端菜单按钮 -->
+                    <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-dark-200 transition-colors">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 移动端导航菜单 -->
+        <div id="mobile-menu" class="md:hidden hidden bg-dark-200 animate-fade-in">
+            <div class="container mx-auto px-4 py-3 space-y-2">
+                <a href="#home" class="block py-2 px-3 rounded-lg hover:bg-dark-100">首页</a>
+                <a href="#founder" class="block py-2 px-3 rounded-lg hover:bg-dark-100">创始人</a>
+                <a href="#about" class="block py-2 px-3 rounded-lg hover:bg-dark-100">工作室简介</a>
+                <a href="#members" class="block py-2 px-3 rounded-lg hover:bg-dark-100">团队成员</a>
+                <a href="#works" class="block py-2 px-3 rounded-lg hover:bg-dark-100">地图作品</a>
+                <a href="#community" class="block py-2 px-3 rounded-lg hover:bg-dark-100">社区交流</a>
+                <a href="#blacklist" class="block py-2 px-3 rounded-lg hover:bg-dark-100">黑名单</a>
+                <a href="#feedback" class="block py-2 px-3 rounded-lg hover:bg-dark-100">反馈中心</a>
+                <a href="#report" class="block py-2 px-3 rounded-lg hover:bg-dark-100">举报中心</a>
+                <a href="#join" class="block py-2 px-3 rounded-lg hover:bg-dark-100">加入我们</a>
+                <button id="mobile-login-btn" class="w-full btn-primary">登录</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 登录模态框 -->
+    <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-light-100 dark:bg-dark-200 rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform scale-95 transition-transform duration-300">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold">账号登录</h3>
+                    <button id="close-login" class="text-light-400 hover:text-dark-300 dark:hover:text-light-100">
+                        <i class="fa fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <!-- 登录选项卡 -->
+                <div class="mb-6 border-b border-light-300 dark:border-dark-100">
+                    <div class="flex">
+                        <button class="login-tab py-2 px-4 font-medium text-primary border-b-2 border-primary" data-type="phone">手机号登录</button>
+                        <button class="login-tab py-2 px-4 font-medium text-light-400 dark:text-light-300 hover:text-primary dark:hover:text-primary" data-type="mininumber">迷你号登录</button>
+                    </div>
+                </div>
+                
+                <!-- 手机号登录表单 -->
+                <form id="phone-login-form" class="space-y-4 login-form">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium">手机号</label>
+                        <input type="tel" class="input-field" placeholder="请输入手机号" required="">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium">验证码</label>
+                        <div class="flex space-x-2">
+                            <input type="text" class="input-field flex-1" placeholder="请输入验证码" required="">
+                            <button type="button" class="btn-secondary whitespace-nowrap">获取验证码</button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded text-primary focus:ring-primary/50 mr-2">
+                            <span class="text-sm">记住我</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="w-full btn-primary">登录</button>
+                </form>
+                
+                <!-- 迷你号登录表单 -->
+                <form id="mininumber-login-form" class="space-y-4 login-form hidden">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium">迷你号</label>
+                        <input type="text" class="input-field" placeholder="请输入迷你号" required="">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium">密码</label>
+                        <input type="password" class="input-field" placeholder="请输入密码" required="">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded text-primary focus:ring-primary/50 mr-2">
+                            <span class="text-sm">记住我</span>
+                        </label>
+                        <a href="#" class="text-sm text-primary hover:underline">忘记密码?</a>
+                    </div>
+                    <button type="submit" class="w-full btn-primary">登录</button>
+                </form>
+                
+                <div class="text-center text-sm mt-6">
+                    还没有账号? <a href="#" id="show-register" class="text-primary hover:underline">立即注册</a>
+                </div>
+                <div class="text-center text-sm my-4">
+                    或使用以下方式登录
+                </div>
+                <div class="flex space-x-4">
+                    <button type="button" class="flex-1 py-2 px-4 rounded-lg bg-[#12B7F5] text-white flex items-center justify-center">
+                        <i class="fa fa-qq mr-2"></i> QQ登录
+                    </button>
+                    <button type="button" class="flex-1 py-2 px-4 rounded-lg bg-[#07C160] text-white flex items-center justify-center">
+                        <i class="fa fa-weixin mr-2"></i> 微信登录
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 注册模态框 -->
+    <div id="register-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-light-100 dark:bg-dark-200 rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform scale-95 transition-transform duration-300">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold">账号注册</h3>
+                    <button id="close-register" class="text-light-400 hover:text-dark-300 dark:hover:text-light-100">
+                        <i class="fa fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <!-- 注册表单 -->
+                <form id="register-form" class="space-y-4">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium">手机号</label>
+                        <input type="tel" class="input-field" placeholder="请输入手机号" required="">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium">验证码</label>
+                        <div class="flex space-x-2">
+                            <input type="text" class="input-field flex-1" placeholder="请输入验证码" required="">
+                            <button type="button" class="btn-secondary whitespace-nowrap">获取验证码</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium">设置密码</label>
+                        <input type="password" class="input-field" placeholder="请设置密码" required="">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium">确认密码</label>
+                        <input type="password" class="input-field" placeholder="请确认密码" required="">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium">迷你号（可选）</label>
+                        <input type="text" class="input-field" placeholder="请输入你的迷你号（选填）">
+                    </div>
+                    <div class="flex items-start">
+                        <input type="checkbox" class="rounded text-primary focus:ring-primary/50 mt-1 mr-2" required="">
+                        <span class="text-sm text-light-400 dark:text-light-300">我已阅读并同意<a href="#" class="text-primary hover:underline">用户协议</a>和<a href="#" class="text-primary hover:underline">隐私政策</a></span>
+                    </div>
+                    <button type="submit" class="w-full btn-primary">注册账号</button>
+                </form>
+                <div class="text-center text-sm mt-6">
+                    已有账号? <a href="#" id="show-login" class="text-primary hover:underline">立即登录</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 管理员认证模态框 -->
+    <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-light-100 dark:bg-dark-200 rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform scale-95 transition-transform duration-300">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold">管理员认证</h3>
+                    <button id="close-admin" class="text-light-400 hover:text-dark-300 dark:hover:text-light-100">
+                        <i class="fa fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <!-- 管理员认证表单 -->
+                <form id="admin-form" class="space-y-4">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium">管理员账号</label>
+                        <input type="text" class="input-field" placeholder="请输入管理员账号" required="">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium">管理员密码</label>
+                        <input type="password" class="input-field" placeholder="请输入管理员密码" required="">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium">认证码</label>
+                        <input type="text" class="input-field" placeholder="请输入管理员认证码" required="">
+                    </div>
+                    <button type="submit" class="w-full btn-primary">确认认证</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- 主页/英雄区 -->
+        <section id="home" class="relative min-h-[85vh] flex items-center bg-gradient-to-br from-dark-300 to-dark-400 dark:from-dark-400 dark:to-dark-300 text-white overflow-hidden">
+            <!-- 新增大型背景动画元素 -->
+            <div class="floating-element bg-primary w-96 h-96 top-1/4 left-1/6 animate-float" style="animation-delay: 0s"></div>
+            <div class="floating-element bg-secondary w-80 h-80 bottom-1/3 right-1/5 animate-float" style="animation-delay: 1s"></div>
+            <div class="floating-element bg-accent w-64 h-64 top-1/2 right-1/3 animate-float" style="animation-delay: 2s"></div>
+            
+            <!-- 装饰性网格背景 -->
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMyMDIwMjAiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTYwIDBoLTYwdjYwaDYwdj0weiIgLz48cGF0aCBkPSJNMzYgMGgtNnYzNmg2djAweiIgLz48cGF0aCBkPSJNMjQgMGgtNnYzNmg2djAweiIgLz48cGF0aCBkPSJNMTIgMGgtNnYzNmg2djAweiIgLz48cGF0aCBkPSJNMjQgMTJoLTZ2Nmg2djAweiIgLz48cGF0aCBkPSJNMzYgMTJoLTZ2Nmg2djAweiIgLz48cGF0aCBkPSJNMTIgMTJoLTZ2Nmg2djAweiIgLz48cGF0aCBkPSJNMjQgMjRoLTZ2Nmg2djAweiIgLz48cGF0aCBkPSJNMTIgMjRoLTZ2Nmg2djAweiIgLz48cGF0aCBkPSJNMzYgMjRoLTZ2Nmg2djAweiIgLz48L2c+PC9nPjwvc3ZnPg==')] opacity-30"></div>
+            
+            <!-- 3D旋转装饰 -->
+            <div class="absolute top-1/4 right-1/4 w-32 h-32 border-4 border-primary/30 rounded-full animate-spin-slow"></div>
+            <div class="absolute bottom-1/3 left-1/4 w-24 h-24 border-4 border-secondary/30 rounded-full animate-spin-slow" style="animation-direction: reverse;"></div>
+            
+            <div class="container mx-auto px-4 py-16 relative z-10">
+                <div class="max-w-3xl mx-auto text-center">
+                    <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold leading-tight mb-6 animate-fade-in animate-pulse-scale">
+                        鹤白工作室
+                    </h1>
+                    <p class="text-[clamp(1.2rem,2vw,1.5rem)] text-light-300 mb-10 animate-slide-up" style="animation-delay: 0.2s">
+                        专注于迷你世界优质地图创作与开发
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4 animate-slide-up" style="animation-delay: 0.4s">
+                        <a href="#join" class="btn-primary text-lg py-3">加入我们</a>
+                        <a href="#works" class="btn-secondary text-lg py-3">浏览作品</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 波浪动画底部 -->
+            <div class="wave-container animate-wave-animation">
+                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C0,0,0,0,0,0V95.8C67.81,118.92,192.14,111.31,321.39,56.44Z" class="shape-fill"></path>
+                </svg>
+            </div>
+            <div class="wave-container-2 animate-wave-animation-delay">
+                <svg data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1007.86,111.31,985.66,92.83Z" class="shape-fill"></path>
+                </svg>
+            </div>
+            
+            <!-- 下滑指示 - 更醒目 -->
+            <div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 animate-bounce-slow z-10 bg-primary/20 p-3 rounded-full">
+                <a href="#founder" class="text-white transition-colors">
+                    <i class="fa fa-chevron-down text-2xl"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- 创始人介绍 -->
+        <section id="founder" class="section-padding bg-light-100 dark:bg-dark-200">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">创始人介绍</h2>
+                    <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
+                </div>
+                
+                <div class="max-w-4xl mx-auto bg-white dark:bg-dark-300 rounded-2xl shadow-lg overflow-hidden scroll-reveal">
+                    <div class="md:flex">
+                        <!-- 头像 -->
+                        <div class="md:w-1/3 p-8 flex items-center justify-center">
+                            <div class="relative w-64 h-64 rounded-full overflow-hidden border-4 border-primary shadow-lg">
+                                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/7660a9d45d1a428b888d45f6e49d2cba~tplv-a9rns2rl98-image.image?rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1754408994&amp;x-signature=HCohNdilZ0Ls8tr23l8w6aGbrjo%3D" alt="鹤白头像" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                        
+                        <!-- 信息 -->
+                        <div class="md:w-2/3 p-8">
+                            <h3 class="text-2xl font-bold mb-4">鹤白</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-semibold text-primary">迷你号</h4>
+                                    <p>小号：1858067060</p>
+                                    <p>大号：1598616734</p>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-primary">发布作品</h4>
+                                    <ul class="list-disc list-inside pl-4 space-y-1">
+                                        <li>刀战系列</li>
+                                        <li>甩锅大作战</li>
+                                        <li>荒路</li>
+                                        <li>一系列生存地图（包括很多张）</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-primary">简介</h4>
+                                    <p>资深迷你世界地图创作者，拥有丰富的地图设计经验和创意理念，致力于为玩家打造沉浸式游戏体验。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 工作室简介 -->
+        <section id="about" class="section-padding bg-light-200 dark:bg-dark-300">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">工作室简介</h2>
+                    <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
+                </div>
+                
+                <div class="max-w-5xl mx-auto">
+                    <div class="grid md:grid-cols-2 gap-10">
+                        <!-- 左侧内容 -->
+                        <div class="space-y-8">
+                            <div class="bg-white dark:bg-dark-200 p-6 rounded-xl shadow-md card-hover scroll-reveal" data-delay="0.1s">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                                        <i class="fa fa-bullseye text-primary text-xl"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold">我们的使命</h3>
+                                </div>
+                                <p>鹤白工作室专注于迷你世界优质地图的创作与开发，致力于为玩家提供沉浸式的游戏体验和创新的玩法模式。我们团队由一群热爱游戏、富有创造力的开发者组成，不断追求卓越，用心打磨每一个作品。</p>
+                            </div>
+                            
+                            <div class="bg-white dark:bg-dark-200 p-6 rounded-xl shadow-md card-hover scroll-reveal" data-delay="0.2s">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                                        <i class="fa fa-trophy text-primary text-xl"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold">我们的成果</h3>
+                                </div>
+                                <p>至今我们已发布多款热门地图，包括《甩锅大作战》《刀战2》《刀战（钢铁工厂）》等，受到了广大玩家的喜爱和好评。我们不断更新优化地图内容，修复已知问题，添加新功能，努力为玩家带来更好的游戏体验。</p>
+                            </div>
+                            
+                            <div class="bg-white dark:bg-dark-200 p-6 rounded-xl shadow-md card-hover scroll-reveal" data-delay="0.3s">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                                        <i class="fa fa-rocket text-primary text-xl"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold">未来计划</h3>
+                                </div>
+                                <p>未来，我们将继续推出更多优质地图，为迷你世界玩家社区贡献力量。不断创新玩法，提升地图质量，打造更多令人难忘的游戏体验。</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 右侧数据 -->
+                        <div class="bg-white dark:bg-dark-200 p-6 rounded-xl shadow-md scroll-reveal" data-delay="0.4s">
+                            <h3 class="text-xl font-bold mb-6 text-center">工作室数据</h3>
+                            
+                            <div class="space-y-8">
+                                <!-- 数据卡片 -->
+                                <div class="text-center">
+                                    <div class="text-4xl font-bold text-primary mb-2 counter" data-target="184000">180000+</div>
+                                    <p class="text-light-400 dark:text-light-300">人气值</p>
+                                </div>
+                                
+                                <div class="text-center">
+                                    <div class="text-4xl font-bold text-primary mb-2 counter" data-target="34">30+</div>
+                                    <p class="text-light-400 dark:text-light-300">发布地图</p>
+                                </div>
+                                
+                                <div class="text-center">
+                                    <div class="text-4xl font-bold text-primary mb-2 counter" data-target="5761">5000+</div>
+                                    <p class="text-light-400 dark:text-light-300">粉丝数</p>
+                                </div>
+                                
+                                <!-- 数据图表 -->
+                                <div class="mt-8">
+                                    <h4 class="text-center font-medium mb-4">来源1598616734</h4>
+                                    <div class="h-64">
+                                        <canvas id="worksChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 团队成员 -->
+        <section id="members" class="section-padding bg-light-100 dark:bg-dark-200">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">团队成员</h2>
+                    <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <!-- 成员1 -->
+                    <div class="bg-white dark:bg-dark-300 rounded-xl shadow-md overflow-hidden card-hover scroll-reveal" data-delay="0.1s">
+                        <div class="p-6 flex items-start">
+                            <div class="w-20 h-20 rounded-full overflow-hidden mr-4 flex-shrink-0">
+                                <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/683f5ec959d24d78973430bb49476d2f~tplv-a9rns2rl98-image.image?rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1754408984&amp;x-signature=Gt6wfnsS86rAJ2n2r0%2BXKw%2Bprhw%3D" alt="鹤白头像" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-1">鹤白</h3>
+                                <p class="text-primary mb-3">创始人 | 地图制作</p>
+                                <p class="text-light-400 dark:text-light-300 text-sm">资深地图创作者，负责工作室整体运营与核心地图开发，拥有丰富的迷你世界地图制作经验。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 成员2 -->
+                    <div class="bg-white dark:bg-dark-300 rounded-xl shadow-md overflow-hidden card-hover scroll-reveal" data-delay="0.2s">
+                        <div class="p-6 flex items-start">
+                            <div class="w-20 h-20 rounded-full overflow-hidden mr-4 flex-shrink-0">
+                                <img src="https://picsum.photos/seed/duzhou/200/200" alt="渡舟头像" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-1">渡舟</h3>
+                                <p class="text-primary mb-3">成员 | 地图设计 | 玩法设计</p>
+                                <p class="text-light-400 dark:text-light-300 text-sm">负责地图创意设计与玩法机制开发，擅长设计新颖有趣的游戏模式，为玩家带来独特体验。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 地图作品 -->
+        <section id="works" class="section-padding bg-light-200 dark:bg-dark-300">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">最新地图作品</h2>
+                    <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
+                    <p class="mt-4 max-w-2xl mx-auto">我们精心制作的最新地图作品，持续更新优化，为您带来最佳游戏体验</p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    <!-- 作品1 -->
+                    <div class="bg-white dark:bg-dark-200 rounded-xl shadow-md overflow-hidden card-hover scroll-reveal" data-delay="0.1s">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/133092bcb1804ffe9eb8e49dda1958fe~tplv-a9rns2rl98-image.image?rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1754421949&amp;x-signature=MzorbIbXvsOK%2F3%2Bne400hK2vJ40%3D" alt="甩锅大作战地图封面" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="text-xl font-bold">甩锅大作战</h3>
+                                <span class="bg-accent/10 text-accent text-xs px-2 py-1 rounded-full">四季主题</span>
+                            </div>
+                            <div class="text-sm text-light-400 dark:text-light-300 mb-4">
+                                版本 2.4.0 | 更新于 2025-02-20
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="font-medium mb-2">地图介绍</h4>
+                                <p class="text-sm text-light-400 dark:text-light-300 mb-3">甩锅大作战2.20版本（四季）重磅来袭。更新了许多玩法。本图有Bug精心修复中耐心等待。欢迎游玩。1.0版本在鹤白的大号。鹤白在直播间等着你，dy搜索鹤白是谁。</p>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="font-medium mb-2">更新内容</h4>
+                                <ul class="text-sm text-light-400 dark:text-light-300 space-y-1">
+                                    <li>• 修复了已知bug</li>
+                                    <li>• 因bug原因将两个模式删除目前仅有一个模式</li>
+                                    <li>• 攻击生物炸弹消失bug正在修复敬请谅解</li>
+                                    <li>• 更新了商店增加两个物品</li>
+                                </ul>
+                            </div>
+                            <button class="w-full btn-primary play-btn" data-map="甩锅大作战">立即游玩</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 作品2 -->
+                    <div class="bg-white dark:bg-dark-200 rounded-xl shadow-md overflow-hidden card-hover scroll-reveal" data-delay="0.2s">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/5a0e5103c304476994c64be323748441~tplv-a9rns2rl98-image.image?rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1754421961&amp;x-signature=AUbv7YcKKl%2FyGBsEz8ng%2For1MY8%3D" alt="刀战2地图封面" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="text-xl font-bold">刀战2</h3>
+                                <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">竞技模式</span>
+                            </div>
+                            <div class="text-sm text-light-400 dark:text-light-300 mb-4">
+                                版本 1.1.2 | 更新于 2025-07-25
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="font-medium mb-2">地图介绍</h4>
+                                <p class="text-sm text-light-400 dark:text-light-300 mb-3">刀战是张多人竞技刀战云服模式。有多种地图欢迎游玩。现在收集榜十名添加欢迎系统，招募管理员增加管理员系统。</p>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="font-medium mb-2">更新内容</h4>
+                                <ul class="text-sm text-light-400 dark:text-light-300 space-y-1">
+                                    <li>• 修复已知BUG</li>
+                                    <li>• 加入积分商店</li>
+                                    <li>• 增加刀皮（星神和概念剑）</li>
+                                    <li>• 增加签到系统</li>
+                                    <li>• 积分系统改进</li>
+                                    <li>• 观战系统优化</li>
+                                </ul>
+                            </div>
+                            <button class="w-full btn-primary play-btn" data-map="刀战2">立即游玩</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 作品3 -->
+                    <div class="bg-white dark:bg-dark-200 rounded-xl shadow-md overflow-hidden card-hover scroll-reveal" data-delay="0.3s">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/12d8c17c11894c4e9baa05cb13eb4511~tplv-a9rns2rl98-image.image?rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1754421967&amp;x-signature=CdZ%2FDjFF3SHHKCgB%2F5vmWLp60us%3D" alt="刀战（钢铁工厂）地图封面" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="text-xl font-bold">刀战（钢铁工厂）</h3>
+                                <span class="bg-secondary/10 text-secondary text-xs px-2 py-1 rounded-full">新地图</span>
+                            </div>
+                            <div class="text-sm text-light-400 dark:text-light-300 mb-4">
+                                版本 1.1.4 | 更新于 2025-07-22
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="font-medium mb-2">地图介绍</h4>
+                                <p class="text-sm text-light-400 dark:text-light-300 mb-3">刀战（钢铁工厂）1.1.4版本欢迎玩家游玩。注意不要破坏游戏环境。该地图不在更新，请关注下一张地图。</p>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="font-medium mb-2">更新内容</h4>
+                                <ul class="text-sm text-light-400 dark:text-light-300 space-y-1">
+                                    <li>• 增加积分商城</li>
+                                    <li>• 增加飞飞飞技能冷却</li>
+                                    <li>• 增加两款刀的皮肤</li>
+                                    <li>• 增加切换队伍卡</li>
+                                    <li>• 增加卡出返回</li>
+                                    <li>• 紧急修复制作失误bug</li>
+                                </ul>
+                            </div>
+                            <button class="w-full btn-primary play-btn" data-map="刀战（钢铁工厂）">立即游玩</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 社区交流 -->
+        <section id="community" class="section-padding bg-light-100 dark:bg-dark-200">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">社区交流</h2>
+                    <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
+                    <p class="mt-4 max-w-2xl mx-auto">加入我们的社区，分享游戏体验，提出宝贵建议</p>
+                </div>
+                
+                <div class="max-w-5xl mx-auto scroll-reveal">
+                    <div class="bg-white dark:bg-dark-300 rounded-xl shadow-md p-6 md:p-8">
+                        <!-- 评论输入区 -->
+                        <div class="mb-10">
+                            <h3 class="text-xl font-bold mb-4">分享你的想法</h3>
+                            <form id="comment-form" class="space-y-4">
+                                <div>
+                                    <textarea class="input-field h-32 resize-none" placeholder="请输入你的评论..."></textarea>
+                                </div>
+                                <div class="flex justify-end">
+                                    <button type="submit" class="btn-primary">发布评论</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- 评论列表 -->
+                        <div>
+                            <h3 class="text-xl font-bold mb-6">玩家评论</h3>
+                            <div class="space-y-6" id="comments-container">
+                                <!-- 评论1 -->
+                                <div class="p-4 border border-light-300 dark:border-dark-100 rounded-lg">
+                                    <div class="flex items-center mb-3">
+                                        <div class="w-10 h-10 rounded-full overflow-hidden mr-3">
+                                            <img src="https://picsum.photos/seed/user1/100/100" alt="用户头像" class="w-full h-full object-cover">
+                                        </div>
+                                        <div>
+                                            <h4 class="font-medium">迷你玩家123</h4>
+                                            <p class="text-xs text-light-400 dark:text-light-300">2025-07-24 15:30</p>
+                                        </div>
+                                    </div>
+                                    <p class="mb-3">甩锅大作战太好玩了！四季主题很有创意，期待后续更多更新内容！</p>
+                                    <div class="flex items-center text-sm">
+                                        <button class="flex items-center text-light-400 dark:text-light-300 hover:text-primary mr-4">
+                                            <i class="fa fa-thumbs-up mr-1"></i> 24
+                                        </button>
+                                        <button class="flex items-center text-light-400 dark:text-light-300 hover:text-primary">
+                                            <i class="fa fa-reply mr-1"></i> 回复
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- 评论2 -->
+                                <div class="p-4 border border-light-300 dark:border-dark-100 rounded-lg">
+                                    <div class="flex items-center mb-3">
+                                        <div class="w-10 h-10 rounded-full overflow-hidden mr-3">
+                                            <img src="https://picsum.photos/seed/user2/100/100" alt="用户头像" class="w-full h-full object-cover">
+                                        </div>
+                                        <div>
+                                            <h4 class="font-medium">刀战爱好者</h4>
+                                            <p class="text-xs text-light-400 dark:text-light-300">2025-07-22 09:15</p>
+                                        </div>
+                                    </div>
+                                    <p class="mb-3">刀战2的新地图钢铁工厂设计得很有特色，积分系统也很完善，希望能增加更多刀皮选择！</p>
+                                    <div class="flex items-center text-sm">
+                                        <button class="flex items-center text-light-400 dark:text-light-300 hover:text-primary mr-4">
+                                            <i class="fa fa-thumbs-up mr-1"></i> 18
+                                        </button>
+                                        <button class="flex items-center text-light-400 dark:text-light-300 hover:text-primary">
+                                            <i class="fa fa-reply mr-1"></i> 回复
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- 评论3 -->
+                                <div class="p-4 border border-light-300 dark:border-dark-100 rounded-lg">
+                                    <div class="flex items-center mb-3">
+                                        <div class="w-10 h-10 rounded-full overflow-hidden mr-3">
+                                            <img src="https://picsum.photos/seed/user3/100/100" alt="用户头像" class="w-full h-full object-cover">
+                                        </div>
+                                        <div>
+                                            <h4 class="font-medium">游戏迷小A</h4>
+                                            <p class="text-xs text-light-400 dark:text-light-300">2025-07-20 21:45</p>
+                                        </div>
+                                    </div>
+                                    <p class="mb-3">荒路这个生存地图很有挑战性，玩了好几天才通关，希望作者能出更多类似的生存地图！</p>
+                                    <div class="flex items-center text-sm">
+                                        <button class="flex items-center text-light-400 dark:text-light-300 hover:text-primary mr-4">
+                                            <i class="fa fa-thumbs-up mr-1"></i> 32
+                                        </button>
+                                        <button class="flex items-center text-light-400 dark:text-light-300 hover:text-primary">
+                                            <i class="fa fa-reply mr-1"></i> 回复
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 加载更多 -->
+                            <div class="text-center mt-8">
+                                <button id="load-more-comments" class="btn-secondary">加载更多评论</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 黑名单 -->
+        <section id="blacklist" class="section-padding bg-light-200 dark:bg-dark-300">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">黑名单</h2>
+                    <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
+                </div>
+                
+                <div class="max-w-4xl mx-auto">
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <!-- 黑名单规定 -->
+                        <div class="md:col-span-1 scroll-reveal" data-delay="0.1s">
+                            <div class="bg-white dark:bg-dark-200 rounded-xl shadow-md p-6 h-full">
+                                <h3 class="text-xl font-bold mb-4">黑名单规定</h3>
+                                <div class="space-y-4 text-sm">
+                                    <p>以下行为将被列入黑名单：</p>
+                                    <ul class="list-disc list-inside pl-2 space-y-2">
+                                        <li>抄袭工作室或其他玩家地图</li>
+                                        <li>在社区发布辱骂、诽谤内容</li>
+                                        <li>恶意刷屏影响社区秩序</li>
+                                        <li>诋毁工作室或玩家地图</li>
+                                        <li>其他违反社区规定的行为</li>
+                                    </ul>
+                                    <p class="text-red-500">一旦列入黑名单，将被限制参与社区互动和游戏体验。</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 黑名单列表 -->
+                        <div class="md:col-span-2 scroll-reveal" data-delay="0.2s">
+                            <div class="bg-white dark:bg-dark-200 rounded-xl shadow-md p-6">
+                                <h3 class="text-xl font-bold mb-6">黑名单成员</h3>
+                                
+                                <div class="space-y-6">
+                                    <!-- 黑名单成员1 -->
+                                    <div class="p-4 border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                                        <div class="flex flex-col md:flex-row md:items-center justify-between">
+                                            <div>
+                                                <h4 class="font-medium text-red-600 dark:text-red-400">DL小咚</h4>
+                                                <p class="text-sm mt-1">迷你号：1141784589</p>
+                                            </div>
+                                            <div class="mt-3 md:mt-0">
+                                                <span class="inline-block px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs rounded-full">永久封禁</span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <h5 class="text-sm font-medium">违反原因：</h5>
+                                            <p class="text-sm mt-1">抄袭玩家地图、辱骂、刷屏、诋毁玩家地图</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 可以添加更多黑名单成员 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 反馈中心 -->
+        <section id="feedback" class="section-padding bg-light-100 dark:bg-dark-200">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">反馈中心</h2>
+                    <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
+                    <p class="mt-4 max-w-2xl mx-auto">提交地图BUG反馈或地图推荐，帮助我们不断改进</p>
+                </div>
+                
+                <div class="max-w-5xl mx-auto scroll-reveal">
+                    <div class="bg-white dark:bg-dark-300 rounded-xl shadow-md overflow-hidden">
+                        <div class="md:flex">
+                            <!-- 左侧：反馈表单 -->
+                            <div class="md:w-2/3 p-6 md:p-8">
+                                <div class="mb-8">
+                                    <h3 class="text-xl font-bold mb-4">提交反馈</h3>
+                                    <form id="feedback-form" class="space-y-4">
+                                        <div>
+                                            <label class="block mb-2 text-sm font-medium">反馈类型</label>
+                                            <select class="input-field">
+                                                <option value="bug">地图BUG反馈</option>
+                                                <option value="suggestion">地图推荐/建议</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block mb-2 text-sm font-medium">涉及地图</label>
+                                            <select class="input-field">
+                                                <option value="">请选择地图</option>
+                                                <option value="shuoguo">甩锅大作战</option>
+                                                <option value="daozhan2">刀战2</option>
+                                                <option value="gangtie">刀战（钢铁工厂）</option>
+                                                <option value="other">其他地图</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block mb-2 text-sm font-medium">迷你号</label>
+                                            <input type="text" class="input-field" placeholder="请输入你的迷你号">
+                                        </div>
+                                        <div>
+                                            <label class="block mb-2 text-sm font-medium">反馈内容</label>
+                                            <textarea class="input-field h-32 resize-none" placeholder="请详细描述你遇到的问题或建议..."></textarea>
+                                        </div>
+                                        <div>
+                                            <label class="block mb-2 text-sm font-medium">上传截图（可选）</label>
+                                            <input type="file" class="input-field" accept="image/*">
+                                        </div>
+                                        <button type="submit" class="btn-primary">提交反馈</button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <!-- 右侧：查询系统 -->
+                            <div class="md:w-1/3 p-6 md:p-8 bg-light-200 dark:bg-dark-200 border-t md:border-t-0 md:border-l border-light-300 dark:border-dark-100">
+                                <h3 class="text-xl font-bold mb-4">反馈查询</h3>
+                                <form id="feedback-query-form" class="space-y-4">
+                                    <div>
+                                        <label class="block mb-2 text-sm font-medium">反馈编号</label>
+                                        <input type="text" class="input-field" placeholder="请输入反馈编号">
+                                    </div>
+                                    <div>
+                                        <label class="block mb-2 text-sm font-medium">迷你号</label>
+                                        <input type="text" class="input-field" placeholder="请输入提交反馈的迷你号">
+                                    </div>
+                                    <button type="submit" class="w-full btn-primary">查询反馈状态</button>
+                                </form>
+                                
+                                <div class="mt-8">
+                                    <h4 class="font-medium mb-3">反馈处理说明</h4>
+                                    <ul class="text-sm space-y-2 text-light-400 dark:text-light-300">
+                                        <li>• 提交反馈后将获得唯一查询编号</li>
+                                        <li>• 我们将在3-5个工作日内处理反馈</li>
+                                        <li>• 您可以通过上方表单查询处理进度</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 举报中心 -->
+        <section id="report" class="section-padding bg-light-200 dark:bg-dark-300">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">举报中心</h2>
+                    <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
+                    <p class="mt-4 max-w-2xl mx-auto">举报违规行为，共同维护良好的社区环境</p>
+                </div>
+                
+                <div class="max-w-5xl mx-auto scroll-reveal">
+                    <div class="bg-white dark:bg-dark-300 rounded-xl shadow-md overflow-hidden">
+                        <div class="md:flex">
+                            <!-- 左侧：举报表单 -->
+                            <div class="md:w-2/3 p-6 md:p-8">
+                                <div class="mb-8">
+                                    <h3 class="text-xl font-bold mb-4">提交举报</h3>
+                                    <form id="report-form" class="space-y-4">
+                                        <div>
+                                            <label class="block mb-2 text-sm font-medium">举报类型</label>
+                                            <select class="input-field">
+                                                <option value="cheat">游戏作弊</option>
+                                                <option value="plagiarism">地图抄袭</option>
+                                                <option value="abuse">言语辱骂</option>
+                                                <option value="spam">恶意刷屏</option>
+                                                <option value="other">其他违规行为</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block mb-2 text-sm font-medium">被举报用户昵称</label>
+                                            <input type="text" class="input-field" placeholder="请输入被举报用户的昵称">
+                                        </div>
+                                        <div>
+                                            <label class="block mb-2 text-sm font-medium">被举报用户迷你号</label>
+                                            <input type="text" class="input-field" placeholder="请输入被举报用户的迷你号">
+                                        </div>
+                                        <div>
+                                            <label class="block mb-2 text-sm font-medium">举报原因</label>
+                                            <textarea class="input-field h-32 resize-none" placeholder="请详细描述举报原因和相关情况..."></textarea>
+                                        </div>
+                                        <div>
+                                            <label class="block mb-2 text-sm font-medium">上传证据（可选）</label>
+                                            <input type="file" class="input-field" accept="image/*,video/*">
+                                        </div>
+                                        <div>
+                                            <label class="block mb-2 text-sm font-medium">你的迷你号（用于后续联系）</label>
+                                            <input type="text" class="input-field" placeholder="请输入你的迷你号">
+                                        </div>
+                                        <button type="submit" class="btn-primary">提交举报</button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <!-- 右侧：举报查询 -->
+                            <div class="md:w-1/3 p-6 md:p-8 bg-light-200 dark:bg-dark-200 border-t md:border-t-0 md:border-l border-light-300 dark:border-dark-100">
+                                <h3 class="text-xl font-bold mb-4">举报查询</h3>
+                                <form id="report-query-form" class="space-y-4">
+                                    <div>
+                                        <label class="block mb-2 text-sm font-medium">举报编号</label>
+                                        <input type="text" class="input-field" placeholder="请输入举报编号">
+                                    </div>
+                                    <div>
+                                        <label class="block mb-2 text-sm font-medium">你的迷你号</label>
+                                        <input type="text" class="input-field" placeholder="请输入提交举报的迷你号">
+                                    </div>
+                                    <button type="submit" class="w-full btn-primary">查询举报处理状态</button>
+                                </form>
+                                
+                                <div class="mt-8">
+                                    <h4 class="font-medium mb-3">举报处理说明</h4>
+                                    <ul class="text-sm space-y-2 text-light-400 dark:text-light-300">
+                                        <li>• 提交举报后将获得唯一查询编号</li>
+                                        <li>• 我们将在5-7个工作日内处理举报</li>
+                                        <li>• 对于有效举报，我们将采取相应措施</li>
+                                        <li>• 请提供真实有效的证据材料</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 加入我们 -->
+        <section id="join" class="section-padding bg-light-100 dark:bg-dark-200">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">加入我们</h2>
+                    <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
+                    <p class="mt-4 max-w-2xl mx-auto">如果你热爱迷你世界地图创作，欢迎加入我们的团队</p>
+                </div>
+                
+                <div class="max-w-3xl mx-auto scroll-reveal">
+                    <div class="bg-white dark:bg-dark-300 rounded-xl shadow-md p-6 md:p-8">
+                        <h3 class="text-xl font-bold mb-6 text-center">加入申请表单</h3>
+                        <form id="join-form" class="space-y-4">
+                            <div>
+                                <label class="block mb-2 text-sm font-medium">你的昵称</label>
+                                <input type="text" class="input-field" placeholder="请输入你的昵称" required="">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium">你的迷你号</label>
+                                <input type="text" class="input-field" placeholder="请输入你的迷你号" required="">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium">擅长领域</label>
+                                <select class="input-field">
+                                    <option value="map-design">地图设计</option>
+                                    <option value="gameplay">玩法设计</option>
+                                    <option value="terrain">地形建造</option>
+                                    <option value="logic">逻辑电路</option>
+                                    <option value="art">美术装饰</option>
+                                    <option value="other">其他</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium">加入意图</label>
+                                <textarea class="input-field h-32 resize-none" placeholder="请说明你想加入工作室的原因，以及你能为工作室带来什么..." required=""></textarea>
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium">作品展示（可选）</label>
+                                <input type="text" class="input-field" placeholder="请输入你的代表作品迷你号或链接">
+                            </div>
+                            <div>
+                                <label class="block mb-2 text-sm font-medium">联系方式</label>
+                                <input type="text" class="input-field" placeholder="请输入你的QQ或其他联系方式" required="">
+                            </div>
+                            <button type="submit" class="w-full btn-primary">提交申请</button>
+                        </form>
+                        
+                        <div class="mt-8 p-4 bg-light-200 dark:bg-dark-200 rounded-lg">
+                            <h4 class="font-medium mb-2">申请说明</h4>
+                            <ul class="text-sm space-y-1 text-light-400 dark:text-light-300">
+                                <li>• 我们会在收到申请后7个工作日内进行审核</li>
+                                <li>• 审核通过后，我们将通过你提供的联系方式与你取得联系</li>
+                                <li>• 加入工作室后，可参与地图创作并获得相应权益</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+         <!-- 合作展示区域 -->
+        <section class="py-16 bg-light-200 dark:bg-dark-300">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold mb-4">战略合作伙伴</h2>
+                    <div class="w-20 h-1 bg-primary mx-auto rounded-full"></div>
+                </div>
+                
+                <div class="max-w-5xl mx-auto bg-white dark:bg-dark-200 rounded-xl shadow-lg p-8 flex flex-col items-center justify-center gap-8">
+                    <div class="flex flex-col items-center">
+                        <h3 class="text-xl font-bold mb-4">鹤白工作室 × JTU冥界遨游工作室</h3>
+                        <div class="flex items-center justify-center gap-8 mb-6">
+                            <div class="w-24 h-24 rounded-full overflow-hidden border-2 border-primary flex items-center justify-center">
+                                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/07490eee2b744729b3ad88b676f0adb1~tplv-a9rns2rl98-image.image?rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1754414919&amp;x-signature=2WutMD8m2x1jwIQDn0JXpERbUtk%3D" alt="鹤白工作室Logo" class="w-20 h-20 rounded-full object-cover">
+                            </div>
+                            <div class="text-2xl font-bold text-primary">×</div>
+                            <div class="w-24 h-24 rounded-full overflow-hidden border-2 border-primary flex items-center justify-center">
+                                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/5503fcbd833445f7a3c942c4d2518f92~tplv-a9rns2rl98-image.image?rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1754422008&amp;x-signature=7%2F2FwGVJaGeS1wSSbTK0XpI7Rfg%3D" alt="JTU冥界遨游工作室Logo" class="w-20 h-20 rounded-full object-cover">
+                            </div>
+                        </div>
+                        <a href="https://api.hlgf001.top/#about" target="_blank" class="btn-primary flex items-center">
+                            <span>访问JTU冥界遨游工作室</span>
+                            <i class="fa fa-external-link ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关注我们 -->
+        <section class="section-padding bg-gradient-to-br from-primary/90 to-primary text-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">关注我们</h2>
+                    <div class="w-20 h-1 bg-white mx-auto rounded-full"></div>
+                </div>
+                
+                <div class="max-w-4xl mx-auto">
+                    <div class="grid md:grid-cols-4 gap-8 text-center">
+                        <!-- 抖音 -->
+                        <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl hover:bg-white/20 transition-colors scroll-reveal" data-delay="0.1s">
+                            <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-4">
+                                <i class="fa fa-music text-2xl"></i>
+                            </div>
+                            <h3 class="font-bold mb-2">抖音</h3>
+                            <a href="https://www.douyin.com/user/MS4wLjABAAAA-BYBgFrpOFnBhEDXWlvhO1eJ-5e9pEAKir6lUVb8-K0HYgnuXMHXntavY1xgtH_k?from_tab_name=main" target="_blank" class="text-white/80 hover:text-white transition-colors">点击关注</a>
+                            <p class="text-sm mt-2 text-white/70">抖音搜索：鹤白是谁</p>
+                        </div>
+                        
+                        <!-- B站 -->
+                        <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl hover:bg-white/20 transition-colors scroll-reveal" data-delay="0.2s">
+                            <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-4">
+                                <i class="fa fa-play-circle text-2xl"></i>
+                            </div>
+                            <h3 class="font-bold mb-2">B站</h3>
+                            <a href="https://space.bilibili.com/3546557817293462?spm_id_from=333.337.0.0" target="_blank" class="text-white/80 hover:text-white transition-colors">点击关注</a>
+                            <p class="text-sm mt-2 text-white/70">B站搜索：鹤白是谁</p>
+                        </div>
+                        
+                        <!-- 邮箱 -->
+                        <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl hover:bg-white/20 transition-colors scroll-reveal" data-delay="0.3s">
+                            <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-4">
+                                <i class="fa fa-envelope text-2xl"></i>
+                            </div>
+                            <h3 class="font-bold mb-2">邮箱</h3>
+                            <a href="mailto:hbgzs_2025@qq.com" class="text-white/80 hover:text-white transition-colors">发送邮件</a>
+                            <p class="text-sm mt-2 text-white/70">hbgzs_2025@qq.com</p>
+                        </div>
+                        
+                        <!-- QQ -->
+                        <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl hover:bg-white/20 transition-colors scroll-reveal" data-delay="0.4s">
+                            <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-4">
+                                <i class="fa fa-qq text-2xl"></i>
+                            </div>
+                            <h3 class="font-bold mb-2">QQ</h3>
+                            <p class="text-white/80">376445844</p>
+                            <p class="text-sm mt-2 text-white/70">欢迎添加咨询</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark-300 text-light-300 py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-10">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/bbfe8598bc2843998ac858af62d2f5b6~tplv-a9rns2rl98-image.image?rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1754424561&amp;x-signature=yg7lVN9x5PsNHog%2FAosPdsh%2BGMg%3D" alt="鹤白工作室Logo" class="w-6 h-6 rounded-full object-cover">
+                        </div>
+                        <span class="font-bold text-lg">鹤白工作室</span>
+                    </div>
+                    <p class="text-sm mb-4">专注于迷你世界优质地图创作与开发，为玩家带来沉浸式游戏体验。</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-light-400 hover:text-primary transition-colors">
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                        <a href="#" class="text-light-400 hover:text-primary transition-colors">
+                            <i class="fa fa-wechat"></i>
+                        </a>
+                        <a href="#" class="text-light-400 hover:text-primary transition-colors">
+                            <i class="fa fa-qq"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">快速链接</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#home" class="hover:text-primary transition-colors">首页</a></li>
+                        <li><a href="#works" class="hover:text-primary transition-colors">地图作品</a></li>
+                        <li><a href="#about" class="hover:text-primary transition-colors">工作室简介</a></li>
+                        <li><a href="#join" class="hover:text-primary transition-colors">加入我们</a></li>
+                        <li><a href="#community" class="hover:text-primary transition-colors">社区交流</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">帮助中心</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#feedback" class="hover:text-primary transition-colors">反馈中心</a></li>
+                        <li><a href="#report" class="hover:text-primary transition-colors">举报中心</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">常见问题</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">使用教程</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">联系我们</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">法律信息</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-primary transition-colors">用户协议</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">隐私政策</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">版权声明</a></li>
+                        <li><a href="#blacklist" class="hover:text-primary transition-colors">违规处理</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-dark-100 pt-6 text-center text-sm">
+                <p>© 2025 鹤白工作室 版权所有 | 本网站已通过SSL安全认证</p>
+                <p class="mt-2">本网站内容仅供交流学习使用，与迷你世界官方无直接关联</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 一键返回顶部按钮 -->
+    <button id="back-to-top" class="fixed bottom-8 right-8 w-12 h-12 rounded-full bg-primary text-white shadow-lg flex items-center justify-center opacity-0 invisible transition-all duration-300 z-30 hover:bg-primary/90">
+        <i class="fa fa-chevron-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // DOM元素
+        const themeToggle = document.getElementById('theme-toggle');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const loginBtn = document.getElementById('login-btn');
+        const mobileLoginBtn = document.getElementById('mobile-login-btn');
+        const loginModal = document.getElementById('login-modal');
+        const registerModal = document.getElementById('register-modal');
+        const adminModal = document.getElementById('admin-modal');
+        const closeLogin = document.getElementById('close-login');
+        const closeRegister = document.getElementById('close-register');
+        const closeAdmin = document.getElementById('close-admin');
+        const showRegister = document.getElementById('show-register');
+        const showLogin = document.getElementById('show-login');
+        const backToTop = document.getElementById('back-to-top');
+        const commentForm = document.getElementById('comment-form');
+        const commentsContainer = document.getElementById('comments-container');
+        const loadMoreComments = document.getElementById('load-more-comments');
+        const loginTabs = document.querySelectorAll('.login-tab');
+        const loginForms = document.querySelectorAll('.login-form');
+        const playButtons = document.querySelectorAll('.play-btn');
+        
+        // 初始化主题
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        
+        // 主题切换
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        });
+        
+        // 移动端菜单切换
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 登录选项卡切换
+        loginTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 移除所有选项卡的活跃状态
+                loginTabs.forEach(t => {
+                    t.classList.remove('text-primary', 'border-primary');
+                    t.classList.add('text-light-400', 'dark:text-light-300');
+                });
+                
+                // 添加当前选项卡的活跃状态
+                tab.classList.add('text-primary', 'border-primary');
+                tab.classList.remove('text-light-400', 'dark:text-light-300');
+                
+                // 隐藏所有表单
+                loginForms.forEach(form => form.classList.add('hidden'));
+                
+                // 显示对应的表单
+                const formId = tab.getAttribute('data-type') + '-login-form';
+                document.getElementById(formId).classList.remove('hidden');
+            });
+        });
+        
+        // 模态框控制
+        function openModal(modal) {
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.remove('scale-95');
+            modal.querySelector('div').classList.add('scale-100');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal(modal) {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.remove('scale-100');
+            modal.querySelector('div').classList.add('scale-95');
+            document.body.style.overflow = '';
+        }
+        
+        loginBtn.addEventListener('click', () => openModal(loginModal));
+        mobileLoginBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+            openModal(loginModal);
+        });
+        
+        closeLogin.addEventListener('click', () => closeModal(loginModal));
+        closeRegister.addEventListener('click', () => closeModal(registerModal));
+        closeAdmin.addEventListener('click', () => closeModal(adminModal));
+        
+        showRegister.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeModal(loginModal);
+            setTimeout(() => openModal(registerModal), 300);
+        });
+        
+        showLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeModal(registerModal);
+            setTimeout(() => openModal(loginModal), 300);
+        });
+        
+        // 点击模态框外部关闭
+        loginModal.addEventListener('click', (e) => {
+            if (e.target === loginModal) closeModal(loginModal);
+        });
+        
+        registerModal.addEventListener('click', (e) => {
+            if (e.target === registerModal) closeModal(registerModal);
+        });
+        
+        adminModal.addEventListener('click', (e) => {
+            if (e.target === adminModal) closeModal(adminModal);
+        });
+        
+        // 立即游玩按钮 - 跳转到指定网址
+        playButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const mapName = button.getAttribute('data-map');
+                // 显示提示信息
+                alert(`即将前往 "${mapName}" 的游玩页面！`);
+                // 跳转到指定网址
+                window.location.href = 'https://newsimg.5054399.com/mnsj/';
+            });
+        });
+        
+        // 表单提交处理
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // 这里可以添加登录逻辑
+            alert('登录功能已触发，实际项目中会连接后端验证');
+            closeModal(loginModal);
+        });
+        
+        document.getElementById('phone-login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // 这里可以添加手机号登录逻辑
+            alert('手机号登录功能已触发，实际项目中会连接后端验证');
+            closeModal(loginModal);
+        });
+        
+        document.getElementById('mininumber-login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // 这里可以添加迷你号登录逻辑
+            alert('迷你号登录功能已触发，实际项目中会连接后端验证');
+            closeModal(loginModal);
+        });
+        
+        document.getElementById('register-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('注册功能已触发，实际项目中会连接后端处理');
+            closeModal(registerModal);
+        });
+        
+        document.getElementById('admin-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('管理员认证功能已触发，实际项目中会连接后端验证');
+            closeModal(adminModal);
+        });
+        
+        document.getElementById('feedback-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('反馈已提交，感谢您的支持！');
+            e.target.reset();
+        });
+        
+        document.getElementById('feedback-query-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('查询功能已触发，实际项目中会连接后端查询');
+        });
+        
+        document.getElementById('report-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('举报已提交，我们会尽快处理，感谢您的支持！');
+            e.target.reset();
+        });
+        
+        document.getElementById('report-query-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('查询功能已触发，实际项目中会连接后端查询');
+        });
+        
+        document.getElementById('join-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('申请已提交，我们会尽快审核，感谢您的关注！');
+            e.target.reset();
+        });
+        
+        // 评论提交
+        commentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const textarea = commentForm.querySelector('textarea');
+            const commentText = textarea.value.trim();
+            
+            if (commentText) {
+                // 创建新评论元素
+                const now = new Date();
+                const dateString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+                
+                const newComment = document.createElement('div');
+                newComment.className = 'p-4 border border-light-300 dark:border-dark-100 rounded-lg animate-fade-in';
+                newComment.innerHTML = `
+                    <div class="flex items-center mb-3">
+                        <div class="w-10 h-10 rounded-full overflow-hidden mr-3">
+                            <img src="https://picsum.photos/seed/newuser/100/100" alt="用户头像" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-medium">我</h4>
+                            <p class="text-xs text-light-400 dark:text-light-300">${dateString}</p>
+                        </div>
+                    </div>
+                    <p class="mb-3">${commentText}</p>
+                    <div class="flex items-center text-sm">
+                        <button class="flex items-center text-light-400 dark:text-light-300 hover:text-primary mr-4">
+                            <i class="fa fa-thumbs-up mr-1"></i> 0
+                        </button>
+                        <button class="flex items-center text-light-400 dark:text-light-300 hover:text-primary">
+                            <i class="fa fa-reply mr-1"></i> 回复
+                        </button>
+                    </div>
+                `;
+                
+                // 添加到评论列表顶部
+                commentsContainer.insertBefore(newComment, commentsContainer.firstChild);
+                
+                // 清空输入框
+                textarea.value = '';
+                alert('评论发布成功！');
+            }
+        });
+        
+        // 加载更多评论
+        loadMoreComments.addEventListener('click', () => {
+            // 模拟加载更多评论
+            loadMoreComments.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 加载中...';
+            
+            setTimeout(() => {
+                // 创建模拟评论
+                for (let i = 0; i < 2; i++) {
+                    const randomId = Math.floor(Math.random() * 1000);
+                    const randomDate = new Date(Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000);
+                    const dateString = `${randomDate.getFullYear()}-${String(randomDate.getMonth() + 1).padStart(2, '0')}-${String(randomDate.getDate()).padStart(2, '0')} ${String(randomDate.getHours()).padStart(2, '0')}:${String(randomDate.getMinutes()).padStart(2, '0')}`;
+                    
+                    const comments = [
+                        "这个地图真的很有趣，我和朋友玩了一下午！",
+                        "希望能增加更多的游戏模式，现在的内容有点少。",
+                        "地图设计得很精美，看得出来作者很用心。",
+                        "有个小BUG，希望作者能尽快修复一下。",
+                        "支持鹤白工作室，期待你们的新作品！"
+                    ];
+                    
+                    const randomComment = comments[Math.floor(Math.random() * comments.length)];
+                    const randomLikes = Math.floor(Math.random() * 50);
+                    
+                    const newComment = document.createElement('div');
+                    newComment.className = 'p-4 border border-light-300 dark:border-dark-100 rounded-lg animate-fade-in';
+                    newComment.innerHTML = `
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full overflow-hidden mr-3">
+                                <img src="https://picsum.photos/seed/user${randomId}/100/100" alt="用户头像" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h4 class="font-medium">玩家${randomId}</h4>
+                                <p class="text-xs text-light-400 dark:text-light-300">${dateString}</p>
+                            </div>
+                        </div>
+                        <p class="mb-3">${randomComment}</p>
+                        <div class="flex items-center text-sm">
+                            <button class="flex items-center text-light-400 dark:text-light-300 hover:text-primary mr-4">
+                                <i class="fa fa-thumbs-up mr-1"></i> ${randomLikes}
+                            </button>
+                            <button class="flex items-center text-light-400 dark:text-light-300 hover:text-primary">
+                                <i class="fa fa-reply mr-1"></i> 回复
+                            </button>
+                        </div>
+                    `;
+                    
+                    commentsContainer.appendChild(newComment);
+                }
+                
+                loadMoreComments.innerHTML = '加载更多评论';
+            }, 1500);
+        });
+        
+        // 滚动监听 - 控制返回顶部按钮显示/隐藏
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.remove('opacity-0', 'invisible');
+                backToTop.classList.add('opacity-100', 'visible');
+            } else {
+                backToTop.classList.add('opacity-0', 'invisible');
+                backToTop.classList.remove('opacity-100', 'visible');
+            }
+            
+            // 导航栏滚动效果
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('bg-dark-300/95', 'backdrop-blur-sm');
+                header.classList.remove('bg-dark-300');
+            } else {
+                header.classList.remove('bg-dark-300/95', 'backdrop-blur-sm');
+                header.classList.add('bg-dark-300');
+            }
+            
+            // 滚动显示动画
+            revealOnScroll();
+        });
+        
+        // 滚动显示动画
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.scroll-reveal');
+            
+            reveals.forEach(reveal => {
+                const windowHeight = window.innerHeight;
+                const elementTop = reveal.getBoundingClientRect().top;
+                const elementVisible = 150;
+                const delay = reveal.getAttribute('data-delay') || 0;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    setTimeout(() => {
+                        reveal.classList.add('animate-fade-in');
+                    }, delay * 1000);
+                }
+            });
+        }
+        
+        // 一键返回顶部
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                // 关闭移动菜单（如果打开）
+                mobileMenu.classList.add('hidden');
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80, // 减去导航栏高度
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // 数字计数器动画
+        function animateCounters() {
+            const counters = document.querySelectorAll('.counter');
+            const speed = 200;
+            
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                
+                const increment = target / speed;
+                
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + increment);
+                    setTimeout(animateCounters, 1);
+                } else {
+                    counter.innerText = target.toLocaleString();
+                }
+            });
+        }
+        
+        // 作品类型分布图表
+        function initWorksChart() {
+            const ctx = document.getElementById('worksChart').getContext('2d');
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#F3F4F6' : '#1F2937';
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['竞技类', '生存类', '休闲类', '其他'],
+                    datasets: [{
+                        data: [40, 35, 20, 5],
+                        backgroundColor: [
+                            '#3B82F6',
+                            '#10B981',
+                            '#F59E0B',
+                            '#6B7280'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: textColor,
+                                padding: 15,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+        
+        // 页面加载完成后初始化
+        window.addEventListener('load', () => {
+            // 初始化计数器动画
+            const statsSection = document.querySelector('#about');
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounters();
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            statsObserver.observe(statsSection);
+            
+            // 初始化图表
+            initWorksChart();
+            
+            // 主题变化时重新初始化图表
+            themeToggle.addEventListener('click', () => {
+                setTimeout(initWorksChart, 300);
+            });
+            
+            // 初始检查需要显示的元素
+            revealOnScroll();
+        });
+    </script>
+
+
+
+    </body></html>
